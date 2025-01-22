@@ -18,7 +18,6 @@ if st.button("Generate Summary", key="summary"):
     documents = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     docs = text_splitter.split_documents(documents)
-    model = "mixtral-8x7b-32768"
     llm = ChatOpenAI(model="gpt-4o", temperature=0, api_key=openai_key)
     chain= load_summarize_chain(llm, chain_type="refine")
     response=chain.invoke(docs)

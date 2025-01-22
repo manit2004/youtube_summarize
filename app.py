@@ -1,13 +1,13 @@
 from langchain_community.document_loaders import YoutubeLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
-from langchain_groq import ChatGroq
+from langchain_openai import ChatOpenAI
 import os
 from dotenv import load_dotenv
 import streamlit as st
 
 load_dotenv() 
-groq_api_key = os.getenv("GROQ_API_KEY")
+openai_key=os.getenv("OPENAI_KEY")
 
 yt_link= st.text_input("Enter the youtube link")
 
@@ -19,10 +19,7 @@ if st.button("Generate Summary", key="summary"):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     docs = text_splitter.split_documents(documents)
     model = "mixtral-8x7b-32768"
-    llm = ChatGroq(
-            groq_api_key=groq_api_key,
-            model_name=model
-    )
+    llm = ChatOpenAI(model="gpt-4o", temperature=0, api_key=openai_key)
     chain= load_summarize_chain(llm, chain_type="refine")
     response=chain.invoke(docs)
     st.write(response['output_text'])
